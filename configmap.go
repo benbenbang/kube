@@ -10,12 +10,12 @@ import (
 
 // GetConfigMaps returns a ConfigMapList.
 func (c *Client) GetConfigMaps(ctx context.Context, namespace string, label ...string) (*corev1.ConfigMapList, error) {
-	return c.client.CoreV1().ConfigMaps(namespace).List(ctx, listOptions(label))
+	return c.cli.CoreV1().ConfigMaps(namespace).List(ctx, listOptions(label))
 }
 
 // GetConfigMap returns a ConfigMap with the given name.
 func (c *Client) GetConfigMap(ctx context.Context, namespace, name string) (*corev1.ConfigMap, error) {
-	return c.client.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
+	return c.cli.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
 }
 
 // CreateConfigMap creates a new ConfigMap.
@@ -23,7 +23,7 @@ func (c *Client) CreateConfigMap(ctx context.Context, cm *corev1.ConfigMap) (*co
 	if len(cm.Namespace) == 0 {
 		return nil, ErrorMissingNamespace
 	}
-	return c.client.CoreV1().ConfigMaps(cm.Namespace).Create(ctx, cm, metav1.CreateOptions{})
+	return c.cli.CoreV1().ConfigMaps(cm.Namespace).Create(ctx, cm, metav1.CreateOptions{})
 }
 
 // UpdateConfigMap updates a ConfigMap.
@@ -31,12 +31,12 @@ func (c *Client) UpdateConfigMap(ctx context.Context, cm *corev1.ConfigMap) (*co
 	if len(cm.Namespace) == 0 {
 		return nil, ErrorMissingNamespace
 	}
-	return c.client.CoreV1().ConfigMaps(cm.Namespace).Update(ctx, cm, metav1.UpdateOptions{})
+	return c.cli.CoreV1().ConfigMaps(cm.Namespace).Update(ctx, cm, metav1.UpdateOptions{})
 }
 
 // PatchConfigMap patch a ConfigMap.
 func (c *Client) PatchConfigMap(ctx context.Context, namespace, name string, data []byte) (*corev1.ConfigMap, error) {
-	return c.client.CoreV1().ConfigMaps(namespace).Patch(
+	return c.cli.CoreV1().ConfigMaps(namespace).Patch(
 		ctx,
 		name,
 		types.StrategicMergePatchType,
@@ -61,5 +61,5 @@ func (c *Client) ApplyConfigMap(ctx context.Context, namespace, name string, dat
 
 // DeleteConfigMap deletes a ConfigMap.
 func (c *Client) DeleteConfigMap(ctx context.Context, namespace, name string) error {
-	return c.client.CoreV1().ConfigMaps(namespace).Delete(ctx, name, metav1.DeleteOptions{})
+	return c.cli.CoreV1().ConfigMaps(namespace).Delete(ctx, name, metav1.DeleteOptions{})
 }

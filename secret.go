@@ -10,12 +10,12 @@ import (
 
 // GetSecrets returns a SecretList.
 func (c *Client) GetSecrets(ctx context.Context, namespace string, label ...string) (*corev1.SecretList, error) {
-	return c.client.CoreV1().Secrets(namespace).List(ctx, listOptions(label))
+	return c.cli.CoreV1().Secrets(namespace).List(ctx, listOptions(label))
 }
 
 // GetSecret returns a Secret with the given name.
 func (c *Client) GetSecret(ctx context.Context, namespace, name string) (*corev1.Secret, error) {
-	return c.client.CoreV1().Secrets(namespace).Get(ctx, name, metav1.GetOptions{})
+	return c.cli.CoreV1().Secrets(namespace).Get(ctx, name, metav1.GetOptions{})
 }
 
 // CreateSecret creates a new Secret.
@@ -23,7 +23,7 @@ func (c *Client) CreateSecret(ctx context.Context, secret *corev1.Secret) (*core
 	if len(secret.Namespace) == 0 {
 		return nil, ErrorMissingNamespace
 	}
-	return c.client.CoreV1().Secrets(secret.Namespace).Create(ctx, secret, metav1.CreateOptions{})
+	return c.cli.CoreV1().Secrets(secret.Namespace).Create(ctx, secret, metav1.CreateOptions{})
 }
 
 // UpdateSecret updates the given Secret.
@@ -31,12 +31,12 @@ func (c *Client) UpdateSecret(ctx context.Context, secret *corev1.Secret) (*core
 	if len(secret.Namespace) == 0 {
 		return nil, ErrorMissingNamespace
 	}
-	return c.client.CoreV1().Secrets(secret.Namespace).Update(ctx, secret, metav1.UpdateOptions{})
+	return c.cli.CoreV1().Secrets(secret.Namespace).Update(ctx, secret, metav1.UpdateOptions{})
 }
 
 // PatchSecret patch the given Secret.
 func (c *Client) PatchSecret(ctx context.Context, namespace, name string, data []byte) (*corev1.Secret, error) {
-	return c.client.CoreV1().Secrets(namespace).Patch(
+	return c.cli.CoreV1().Secrets(namespace).Patch(
 		ctx,
 		name,
 		types.StrategicMergePatchType,
@@ -75,5 +75,5 @@ func (c *Client) ApplySecretBytes(ctx context.Context, namespace, name string, d
 
 // DeleteSecret deletes a Secret.
 func (c *Client) DeleteSecret(ctx context.Context, namespace, name string) error {
-	return c.client.CoreV1().Secrets(namespace).Delete(ctx, name, metav1.DeleteOptions{})
+	return c.cli.CoreV1().Secrets(namespace).Delete(ctx, name, metav1.DeleteOptions{})
 }

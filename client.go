@@ -22,7 +22,7 @@ var ErrorMissingNamespace = errors.New("missing namespace")
 
 // Client represents kubernetes Client.
 type Client struct {
-	client    kubernetes.Interface
+	cli       kubernetes.Interface
 	metrics   *versioned.Clientset
 	cfg       *Config
 	proxy     func(request *http.Request) (*url.URL, error)
@@ -69,17 +69,17 @@ func (c *Client) DialMetrics() (*versioned.Clientset, error) {
 
 // Dial returns a new kubernetes.Clientset to the kubernetes server.
 func (c *Client) Dial() (kubernetes.Interface, error) {
-	if c.client != nil {
-		return c.client, nil
+	if c.cli != nil {
+		return c.cli, nil
 	}
 	cfg, err := c.RestConfig()
 	if err != nil {
 		return nil, err
 	}
-	if c.client, err = kubernetes.NewForConfig(cfg); err != nil {
+	if c.cli, err = kubernetes.NewForConfig(cfg); err != nil {
 		return nil, err
 	}
-	return c.client, nil
+	return c.cli, nil
 }
 
 // RestConfig returns a complete rest client config.
@@ -121,4 +121,12 @@ func (c *Client) ResourceClient(gv schema.GroupVersion) (rest.Interface, error) 
 		cfg.APIPath = defaultApisUriPath
 	}
 	return rest.RESTClientFor(cfg)
+}
+
+func (c *Client) GetKubeCli() kubernetes.Interface {
+	return c.cli
+}
+
+func (c *Client) GetKubeConfig() *Config {
+	return c.cfg
 }

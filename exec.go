@@ -17,7 +17,7 @@ func (c *Client) Exec(pod, container, namespace, command string) (string, string
 	if err != nil {
 		return "", "", err
 	}
-	req := c.client.CoreV1().RESTClient().Post().
+	req := c.cli.CoreV1().RESTClient().Post().
 		Resource("pods").Name(p.Name).
 		Namespace(p.Namespace).
 		SubResource("exec")

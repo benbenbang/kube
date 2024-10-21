@@ -32,7 +32,7 @@ func (c *Client) execute(op Operation, files ...string) error {
 		return err
 	}
 	// Create a REST mapper that tracks information about the available resources in the cluster.
-	groupResources, err := restmapper.GetAPIGroupResources(c.client.Discovery())
+	groupResources, err := restmapper.GetAPIGroupResources(c.cli.Discovery())
 	if err != nil {
 		return err
 	}
