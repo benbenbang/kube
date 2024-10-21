@@ -1,4 +1,4 @@
-module kube
+module github.com/benbenbang/kube
 
 go 1.23.2
 
