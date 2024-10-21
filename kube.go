@@ -14,9 +14,11 @@ import (
 )
 
 func GetKubeConfig() *Config {
-	home := homedir.HomeDir()
-	configPath := filepath.Join(home, ".kube", "config")
-
+	configPath := os.Getenv("KUBE_CLIENT_KUBECONFIG_PATH")
+	if configPath == "" {
+		home := homedir.HomeDir()
+		configPath = filepath.Join(home, ".kube", "config")
+	}
 	flags := genericclioptions.NewConfigFlags(false)
 	flags.KubeConfig = &configPath
 
