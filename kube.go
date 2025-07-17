@@ -2,11 +2,13 @@ package kube
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/homedir"
 	kcli "k8s.io/component-base/cli"
 	kcmd "k8s.io/kubectl/pkg/cmd"
@@ -35,6 +37,17 @@ func FromKubeConfig() *Client {
 	}
 
 	return cli
+}
+
+func FromKubeConfigWithKubeConn() (*Client, *kubernetes.Interface, error) {
+	cfg := GetKubeConfig()
+	cli := New(cfg)
+	conn, err := cli.Dial()
+	if err != nil {
+		return nil, nil, fmt.Errorf("unable to connect to cluster. error message: %v", err)
+	}
+
+	return cli, &conn, nil
 }
 
 func Kubectl(cmdRaw []string) string {
