@@ -1,0 +1,29 @@
+name: semantic release
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "If you are sure to launch a new release, put the value to true."
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  id-token: write
+  packages: read
+
+jobs:
+  semantic-release:
+    name: semantic release
+    if: github.event.inputs.prompt == 'true'
+    uses: benbenbang/r-workflows/.github/workflows/semantic-release.yml@main
+    secrets: inherit
+    with:
+      new_version_title: "🕸️ Kube client"
+      dry_run: false
