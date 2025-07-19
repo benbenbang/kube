@@ -3,7 +3,6 @@ package kube
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -27,16 +26,12 @@ func GetKubeConfig() *Config {
 	return NewConfig(flags)
 }
 
-func FromKubeConfig() *Client {
+func FromKubeConfig() (*Client, error) {
 	cfg := GetKubeConfig()
 	cli := New(cfg)
 	_, err := cli.Dial()
-	if err != nil {
-		log.Fatal("unable to connect to kubernetes")
-		os.Exit(1)
-	}
 
-	return cli
+	return cli, err
 }
 
 func FromKubeConfigWithKubeConn() (*Client, *kubernetes.Interface, error) {
