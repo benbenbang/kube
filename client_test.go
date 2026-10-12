@@ -33,7 +33,15 @@ func TestMain(m *testing.M) {
 		flags.KubeConfig = &kubeconfig
 		cfg := NewConfig(flags)
 		mockcli = New(cfg)
+	}
 
-		os.Exit(m.Run())
+	os.Exit(m.Run())
+}
+
+// requireCluster skips a test that needs a live cluster unless -kubeconfig is given.
+func requireCluster(t *testing.T) {
+	t.Helper()
+	if mockcli == nil {
+		t.Skip("needs a live cluster: go test -args -kubeconfig <path>")
 	}
 }

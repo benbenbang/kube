@@ -1,12 +1,29 @@
 package kube
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
+
+// fixtureCopy copies a testdata kubeconfig into a temp dir, so tests that write to their
+// kubeconfig never modify the tracked fixtures.
+func fixtureCopy(t *testing.T, name string) string {
+	t.Helper()
+	data, err := os.ReadFile(filepath.Join("testdata", name))
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), name)
+	if err := os.WriteFile(path, data, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
 
 type currentFuncRes struct {
 	err   string
@@ -62,7 +79,7 @@ func TestConfigContexts(t *testing.T) {
 }
 
 func TestConfigUseContext(t *testing.T) {
-	c := "testdata/multi-ctx-config"
+	c := fixtureCopy(t, "multi-ctx-config")
 	ctx := "dev-frontend"
 	flags := genericclioptions.NewConfigFlags(false)
 	flags.KubeConfig = &c
@@ -87,7 +104,7 @@ func TestConfigUseContext(t *testing.T) {
 }
 
 func TestConfigSetContext(t *testing.T) {
-	c := "testdata/config"
+	c := fixtureCopy(t, "config")
 	ctxname := "testset"
 	ctx := &clientcmdapi.Context{
 		Cluster:   "testsetcluster",
@@ -124,7 +141,7 @@ func TestConfigSetContext(t *testing.T) {
 }
 
 func TestConfigSetCluster(t *testing.T) {
-	c := "testdata/config"
+	c := fixtureCopy(t, "config")
 	clustername := "testset"
 	cluster := &clientcmdapi.Cluster{
 		Server:                "https://7.8.9.0",
@@ -162,7 +179,7 @@ func TestConfigSetCluster(t *testing.T) {
 }
 
 func TestConfigSetCredentials(t *testing.T) {
-	c := "testdata/config"
+	c := fixtureCopy(t, "config")
 	authname := "testset"
 	auth := &clientcmdapi.AuthInfo{
 		ClientCertificateData: []byte("==ezzdifugh"),

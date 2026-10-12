@@ -11,11 +11,21 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 )
 
-// Exec is like kubectl exec.
+// Exec is like kubectl exec, running command through `sh -c`.
 func (c *Client) Exec(pod, container, namespace, command string) (string, string, error) {
-	p, err := c.GetPod(context.TODO(), namespace, pod)
+	return c.ExecCommand(context.TODO(), pod, container, namespace, []string{"sh", "-c", command})
+}
+
+// ExecCommand is like `kubectl exec <pod> -c <container> -- <argv...>`, without a shell.
+// An empty container picks the kubectl.kubernetes.io/default-container annotation, then the
+// first container, as kubectl does. A non-zero exit status is returned as an error.
+func (c *Client) ExecCommand(ctx context.Context, pod, container, namespace string, argv []string) (string, string, error) {
+	p, err := c.GetPod(ctx, namespace, pod)
 	if err != nil {
 		return "", "", err
+	}
+	if container == "" {
+		container = defaultContainer(p)
 	}
 	req := c.cli.CoreV1().RESTClient().Post().
 		Resource("pods").Name(p.Name).
@@ -28,7 +38,7 @@ func (c *Client) Exec(pod, container, namespace, command string) (string, string
 		Stderr:    true,
 		TTY:       false,
 		Container: container,
-		Command:   []string{"sh", "-c", command},
+		Command:   argv,
 	}, scheme.ParameterCodec)
 
 	var (
@@ -43,13 +53,19 @@ func (c *Client) Exec(pod, container, namespace, command string) (string, string
 	if err != nil {
 		return "", "", err
 	}
-	err = exec.Stream(remotecommand.StreamOptions{
-		Stdin:  nil,
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})
-	if err != nil {
-		return "", "", err
-	}
 	return strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()), err
+}
+
+func defaultContainer(pod *corev1.Pod) string {
+	if name := pod.Annotations["kubectl.kubernetes.io/default-container"]; name != "" {
+		return name
+	}
+	if len(pod.Spec.Containers) > 0 {
+		return pod.Spec.Containers[0].Name
+	}
+	return ""
 }

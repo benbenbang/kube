@@ -11,6 +11,7 @@ import (
 )
 
 func TestClientSecret(t *testing.T) {
+	requireCluster(t)
 	mocksecretname := "mocksecret"
 	mocksecretnamenoexist := "mocksecretnoexist"
 	mocksecretnamespace := "default"

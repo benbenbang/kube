@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"net/url"
 
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/cli-runtime/pkg/resource"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/metrics/pkg/client/clientset/versioned"
@@ -23,6 +25,8 @@ var ErrorMissingNamespace = errors.New("missing namespace")
 // Client represents kubernetes Client.
 type Client struct {
 	cli       kubernetes.Interface
+	dyn       dynamic.Interface
+	mapper    meta.ResettableRESTMapper
 	metrics   *versioned.Clientset
 	cfg       *Config
 	proxy     func(request *http.Request) (*url.URL, error)
