@@ -1,12 +1,13 @@
 repos:
   - repo: https://github.com/benbenbang/pre-commit-golang
-    rev: 1.1.0
+    rev: "1.3.0"
     hooks:
       - id: go-fmt
       - id: go-vet
       - id: go-mod-tidy
+      - id: go-unit-tests
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
         args:
