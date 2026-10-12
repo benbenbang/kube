@@ -7,6 +7,7 @@ import (
 )
 
 func TestClientExec(t *testing.T) {
+	requireCluster(t)
 	if len(podname) == 0 || len(containername) == 0 || len(namespace) == 0 {
 		return
 	}

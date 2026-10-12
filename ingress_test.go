@@ -10,6 +10,7 @@ import (
 )
 
 func TestClientIngress(t *testing.T) {
+	requireCluster(t)
 	mockingressname := "mockingress"
 	mockingressnamespace := "default"
 	mockingtype := networkv1.PathType("Prefix")

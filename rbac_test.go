@@ -11,6 +11,7 @@ import (
 )
 
 func TestClientRole(t *testing.T) {
+	requireCluster(t)
 	mockrolename := "mockrole"
 	mockrolenamespace := "default"
 
@@ -61,6 +62,7 @@ func TestClientRole(t *testing.T) {
 }
 
 func TestClientServiceAccount(t *testing.T) {
+	requireCluster(t)
 	mocksaname := "mocksa"
 	mocksanamespace := "default"
 
@@ -111,6 +113,7 @@ func TestClientServiceAccount(t *testing.T) {
 }
 
 func TestClientClusterRole(t *testing.T) {
+	requireCluster(t)
 	mockclusterrolename := "mockclusterrole"
 
 	// clean

@@ -11,6 +11,7 @@ import (
 )
 
 func TestClientNode(t *testing.T) {
+	requireCluster(t)
 	list, err := mockcli.GetNodes(context.TODO())
 	require.NoError(t, err)
 	if len(list.Items) == 0 {
@@ -23,6 +24,7 @@ func TestClientNode(t *testing.T) {
 }
 
 func TestClientNamespace(t *testing.T) {
+	requireCluster(t)
 	mocknsname := "mocknamespace"
 	t.Run("get:namespace", func(t *testing.T) {
 		ns, err := mockcli.GetNamespace(context.TODO(), "default")

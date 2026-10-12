@@ -11,6 +11,7 @@ import (
 )
 
 func TestClientService(t *testing.T) {
+	requireCluster(t)
 	var mockserviceport int32 = 8001
 	mockservicename := "mockservice"
 	mockservicenamespace := "default"

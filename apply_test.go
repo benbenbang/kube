@@ -11,6 +11,7 @@ import (
 )
 
 func TestClientApply(t *testing.T) {
+	requireCluster(t)
 	k8s, err := mockcli.Dial()
 	require.NoError(t, err)
 

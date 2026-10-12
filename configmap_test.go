@@ -12,6 +12,7 @@ import (
 )
 
 func TestClientConfigmap(t *testing.T) {
+	requireCluster(t)
 	mockcmname := "mockconfigmap"
 	mockcmnamenoexist := "mockcmnamenoexist"
 	mockcmnamespace := "default"
