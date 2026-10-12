@@ -22,7 +22,7 @@ jobs:
   semantic-release:
     name: semantic release
     if: github.event.inputs.prompt == 'true'
-    uses: benbenbang/r-workflows/.github/workflows/semantic-release.yml@main
+    uses: benbenbang/reusable-workflows/.github/workflows/semantic-release.yml@main
     secrets: inherit
     with:
       new_version_title: "🕸️ Kube client"
