@@ -3,7 +3,7 @@
     "main"
   ],
   "parserOpts": {
-    "revertPattern": "^revert.*"
+    "revertPattern": "^revert\\s.(\\w*\\([\\w\\$\\.\\-\\* ]*\\)\\: .*).\\s*This reverts commit (\\w*)?"
   },
   "plugins": [
     [
@@ -18,8 +18,12 @@
         "preset": "conventionalcommits",
         "releaseRules": [
           {
+            "release": "major",
+            "type": "incompat"
+          },
+          {
             "breaking": true,
-            "release": "major"
+            "release": "minor"
           },
           {
             "release": "minor",
@@ -47,17 +51,22 @@
           },
           {
             "release": "patch",
-            "type": "fix"
+            "type": "revert"
           },
           {
             "release": "patch",
-            "type": "revert"
+            "type": "fix"
           }
         ]
       }
     ],
     "@semantic-release/release-notes-generator",
-    "@semantic-release/github"
+    [
+      "@semantic-release/github",
+      {
+        "githubUrl": "https://api.github.com"
+      }
+    ]
   ],
   "preset": "conventionalcommits",
   "presetConfig": {
@@ -65,6 +74,11 @@
       {
         "section": ":zap: Breaking Changes",
         "type": "*"
+      },
+      {
+        "hidden": false,
+        "section": ":zap: Breaking Changes",
+        "type": "incompat"
       },
       {
         "hidden": false,
@@ -78,17 +92,17 @@
       },
       {
         "hidden": false,
-        "section": ":building_construction: CI, Workflows & Configs",
+        "section": ":hotsprings: CI, Workflows & Configs",
         "type": "ci"
       },
       {
         "hidden": false,
-        "section": ":building_construction: CI, Workflows & Configs",
+        "section": ":hotsprings: CI, Workflows & Configs",
         "type": "ops"
       },
       {
         "hidden": false,
-        "section": ":building_construction: CI, Workflows & Configs",
+        "section": ":hotsprings: CI, Workflows & Configs",
         "type": "chore"
       },
       {
@@ -128,5 +142,5 @@
       }
     ]
   },
-  "tagFormat": "v${version}"
+  "tagFormat": "${version}"
 }
