@@ -1,2 +1,17 @@
 [tools]
 go = "1.26.9"
+
+[tasks.go-fmt]
+run = "go fmt ./..."
+
+[tasks.go-mod]
+run = "go mod tidy && go mod vendor"
+
+[tasks.vet]
+run = "go vet ./..."
+
+[tasks.tests]
+run = "go test ./..."
+
+[tasks.prek]
+run = "prek --all-files"
